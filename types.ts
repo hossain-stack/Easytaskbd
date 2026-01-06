@@ -10,7 +10,15 @@ export type Screen =
   | 'DEPOSIT' 
   | 'ORDER_CONFIRMATION'
   | 'PREMIUM_SUBSCRIBE'
-  | 'LOGIN';
+  | 'LOGIN'
+  | 'SIGNUP'
+  | 'ABOUT'
+  | 'TERMS'
+  | 'PRIVACY'
+  | 'CONTACT'
+  | 'HELP'
+  | 'BLOG'
+  | 'BLOG_DETAIL';
 
 export interface PricingTier {
   name: string;
@@ -65,4 +73,14 @@ export interface Microjob {
 export interface EarningData {
   month: string;
   amount: number;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  image: string;
+  date: string;
+  readTime: string;
 }
