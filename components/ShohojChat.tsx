@@ -4,8 +4,6 @@ import { MessageCircle, X, Send, Bot, Loader2, Search, MapPin } from 'lucide-rea
 import { GoogleGenAI } from '@google/genai';
 import { MOCK_GIGS } from '../constants';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 const ShohojChat: React.FC<{ onRecommend: (id: string) => void }> = ({ onRecommend }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'bot'; content: string; recommendations?: any[] }[]>([
@@ -27,6 +25,9 @@ const ShohojChat: React.FC<{ onRecommend: (id: string) => void }> = ({ onRecomme
     setIsTyping(true);
 
     try {
+      // Initialize AI client right before the call to ensure up-to-date config and prevent top-level crashes
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      
       const prompt = `You are "Shohoj", a helpful AI assistant for EasyTaskBD, a freelancer platform in Bangladesh. 
       Users will ask to find people or about the site. 
       Available Freelancers: ${JSON.stringify(MOCK_GIGS.map(g => ({ id: g.id, title: g.title, seller: g.seller.name, category: g.category, location: g.location })))}
@@ -52,8 +53,8 @@ const ShohojChat: React.FC<{ onRecommend: (id: string) => void }> = ({ onRecomme
 
       setMessages(prev => [...prev, { role: 'bot', content: responseText, recommendations: recs }]);
     } catch (error) {
-      console.error(error);
-      setMessages(prev => [...prev, { role: 'bot', content: "Oops, something went wrong. Try again!" }]);
+      console.error('Shohoj AI Error:', error);
+      setMessages(prev => [...prev, { role: 'bot', content: "I'm currently having a bit of trouble thinking. Please try again in a moment!" }]);
     } finally {
       setIsTyping(false);
     }
